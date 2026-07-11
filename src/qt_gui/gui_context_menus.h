@@ -5,11 +5,15 @@
 
 #include <functional>
 
+#include <QCheckBox>
 #include <QClipboard>
 #include <QDesktopServices>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QMenu>
 #include <QMessageBox>
 #include <QTreeWidgetItem>
+#include <QVBoxLayout>
 
 #include "background_music_player.h"
 #include "cheats_patches.h"
@@ -534,7 +538,9 @@ public:
         }
 
         if (selected == &addToSteamDefault) {
-            m_steam_shortcut.requestAddToSteam(m_games[itemID]);
+            if (ConfirmSteamShortcutOptions(widget, m_gui_settings)) {
+                m_steam_shortcut.requestAddToSteam(m_games[itemID]);
+            }
         }
 
         if (selected == &addToSteamVersion) {
@@ -801,6 +807,36 @@ public:
 
 private:
     SteamShortcut m_steam_shortcut{nullptr};
+
+    // Small confirmation dialog shown before adding a shortcut with the currently
+    // selected emulator version, letting the user decide whether the version tag
+    // (e.g. "[shadPS4]") should be appended to the Steam shortcut's name.
+    // Returns true if the user confirmed (OK), false if they cancelled.
+    bool ConfirmSteamShortcutOptions(QWidget* parent, std::shared_ptr<gui_settings> gui_settings) {
+        QDialog confirmDialog(parent);
+        confirmDialog.setWindowTitle(tr("Add to Steam"));
+
+        QVBoxLayout* layout = new QVBoxLayout(&confirmDialog);
+        QCheckBox* addVersionNameCheckBox =
+            new QCheckBox(tr("Add version name to Steam shortcut (Steam only)"), &confirmDialog);
+        addVersionNameCheckBox->setChecked(gui_settings->GetValue(gui::ss_addVersionTag).toBool());
+
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(
+            QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &confirmDialog);
+
+        layout->addWidget(addVersionNameCheckBox);
+        layout->addWidget(buttonBox);
+
+        QObject::connect(buttonBox, &QDialogButtonBox::accepted, &confirmDialog, &QDialog::accept);
+        QObject::connect(buttonBox, &QDialogButtonBox::rejected, &confirmDialog, &QDialog::reject);
+
+        if (confirmDialog.exec() != QDialog::Accepted) {
+            return false;
+        }
+
+        gui_settings->SetValue(gui::ss_addVersionTag, addVersionNameCheckBox->isChecked());
+        return true;
+    }
 
     void requestShortcut(const GameInfo& selectedInfo, QString emuPath = "") {
         // Path to shortcut/link

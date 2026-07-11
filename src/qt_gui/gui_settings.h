@@ -15,6 +15,7 @@ const QString game_list_column = "game_list_column";
 const QString game_grid = "game_grid";
 const QString favorites = "favorites";
 const QString version_manager = "version_manager";
+const QString steam_shortcut = "steam_shortcut";
 
 // general
 const gui_value gen_checkForUpdates = gui_value(general_settings, "checkForUpdates", false);
@@ -73,6 +74,9 @@ const gui_value vm_versionPath = gui_value(version_manager, "versionPath", "");
 const gui_value vm_versionSelected = gui_value(version_manager, "versionSelected", "");
 const gui_value vm_showChangeLog = gui_value(version_manager, "showChangeLog", "");
 const gui_value vm_checkOnStartup = gui_value(version_manager, "checkOnStartup", "");
+
+// steam shortcut
+const gui_value ss_addVersionTag = gui_value(steam_shortcut, "addVersionTag", true);
 
 } // namespace gui
 

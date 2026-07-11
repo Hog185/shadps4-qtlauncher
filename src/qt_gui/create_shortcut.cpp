@@ -33,11 +33,19 @@ void ShortcutDialog::setupUI() {
         new QListWidgetItem(versions.fileName(), listWidget);
     }
 
+    addVersionNameCheckBox =
+        new QCheckBox(tr("Add version name to Steam shortcut (Steam only)"), this);
+    addVersionNameCheckBox->setChecked(m_gui_settings->GetValue(gui::ss_addVersionTag).toBool());
+    connect(addVersionNameCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
+        m_gui_settings->SetValue(gui::ss_addVersionTag, checked);
+    });
+
     QDialogButtonBox* buttonBox =
         new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
     mainLayout->addWidget(versionLabel);
     mainLayout->addWidget(listWidget);
+    mainLayout->addWidget(addVersionNameCheckBox);
     mainLayout->addWidget(buttonBox);
 
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QWidget::close);

@@ -539,7 +539,8 @@ public:
 
         if (selected == &addToSteamDefault) {
             if (ConfirmSteamShortcutOptions(widget, m_gui_settings)) {
-                m_steam_shortcut.requestAddToSteam(m_games[itemID]);
+                SteamShortcut steamShortcut(m_gui_settings);
+                steamShortcut.requestAddToSteam(m_games[itemID]);
             }
         }
 
@@ -547,7 +548,8 @@ public:
             auto shortcutWindow = new ShortcutDialog(m_gui_settings);
             QObject::connect(shortcutWindow, &ShortcutDialog::shortcutRequested, this,
                              [=, this](QString version) {
-                                 m_steam_shortcut.requestAddToSteam(m_games[itemID], version);
+                                 SteamShortcut steamShortcut(m_gui_settings);
+                                 steamShortcut.requestAddToSteam(m_games[itemID], version);
                              });
             shortcutWindow->exec();
             delete shortcutWindow;
@@ -806,8 +808,6 @@ public:
     }
 
 private:
-    SteamShortcut m_steam_shortcut{nullptr};
-
     // Small confirmation dialog shown before adding a shortcut with the currently
     // selected emulator version, letting the user decide whether the "[shadPS4]" /
     // "[shadPS4 <version>]" tag should be omitted from the Steam shortcut's name.

@@ -76,7 +76,9 @@ const gui_value vm_showChangeLog = gui_value(version_manager, "showChangeLog", "
 const gui_value vm_checkOnStartup = gui_value(version_manager, "checkOnStartup", "");
 
 // steam shortcut
-const gui_value ss_addVersionTag = gui_value(steam_shortcut, "addVersionTag", true);
+// When true, the "[shadPS4]" / "[shadPS4 <version>]" tag is omitted from the
+// Steam shortcut's display name entirely.
+const gui_value ss_removeShadps4Text = gui_value(steam_shortcut, "removeShadps4Text", false);
 
 } // namespace gui
 

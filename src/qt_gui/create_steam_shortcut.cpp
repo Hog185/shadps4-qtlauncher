@@ -319,10 +319,12 @@ void SteamShortcut::requestAddToSteam(const GameInfo& selectedInfo, QString emuP
     Common::FS::PathToQString(iconPath, selectedInfo.icon_path);
     QString gameName = QString::fromStdString(selectedInfo.name);
 
-    const bool addVersionTag =
-        !m_gui_settings || m_gui_settings->GetValue(gui::ss_addVersionTag).toBool();
+    // Covers both the plain "[shadPS4]" tag and the version-specific
+    // "[shadPS4 <version>]" tag as a single toggle.
+    const bool removeShadps4Text =
+        m_gui_settings && m_gui_settings->GetValue(gui::ss_removeShadps4Text).toBool();
 
-    if (addVersionTag) {
+    if (!removeShadps4Text) {
         if (emuPath.isEmpty()) {
             gameName += " [shadPS4]";
         } else {

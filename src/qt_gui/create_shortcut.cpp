@@ -33,11 +33,11 @@ void ShortcutDialog::setupUI() {
         new QListWidgetItem(versions.fileName(), listWidget);
     }
 
-    addVersionNameCheckBox =
-        new QCheckBox(tr("Add version name to Steam shortcut (Steam only)"), this);
-    addVersionNameCheckBox->setChecked(m_gui_settings->GetValue(gui::ss_addVersionTag).toBool());
-    connect(addVersionNameCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
-        m_gui_settings->SetValue(gui::ss_addVersionTag, checked);
+    removeShadps4TextCheckBox = new QCheckBox(tr("Remove shadPS4 text"), this);
+    removeShadps4TextCheckBox->setChecked(
+        m_gui_settings->GetValue(gui::ss_removeShadps4Text).toBool());
+    connect(removeShadps4TextCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
+        m_gui_settings->SetValue(gui::ss_removeShadps4Text, checked);
     });
 
     QDialogButtonBox* buttonBox =
@@ -45,7 +45,7 @@ void ShortcutDialog::setupUI() {
 
     mainLayout->addWidget(versionLabel);
     mainLayout->addWidget(listWidget);
-    mainLayout->addWidget(addVersionNameCheckBox);
+    mainLayout->addWidget(removeShadps4TextCheckBox);
     mainLayout->addWidget(buttonBox);
 
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QWidget::close);

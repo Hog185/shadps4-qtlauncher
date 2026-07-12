@@ -809,22 +809,23 @@ private:
     SteamShortcut m_steam_shortcut{nullptr};
 
     // Small confirmation dialog shown before adding a shortcut with the currently
-    // selected emulator version, letting the user decide whether the version tag
-    // (e.g. "[shadPS4]") should be appended to the Steam shortcut's name.
+    // selected emulator version, letting the user decide whether the "[shadPS4]" /
+    // "[shadPS4 <version>]" tag should be omitted from the Steam shortcut's name.
     // Returns true if the user confirmed (OK), false if they cancelled.
     bool ConfirmSteamShortcutOptions(QWidget* parent, std::shared_ptr<gui_settings> gui_settings) {
         QDialog confirmDialog(parent);
         confirmDialog.setWindowTitle(tr("Add to Steam"));
 
         QVBoxLayout* layout = new QVBoxLayout(&confirmDialog);
-        QCheckBox* addVersionNameCheckBox =
-            new QCheckBox(tr("Add version name to Steam shortcut (Steam only)"), &confirmDialog);
-        addVersionNameCheckBox->setChecked(gui_settings->GetValue(gui::ss_addVersionTag).toBool());
+        QCheckBox* removeShadps4TextCheckBox =
+            new QCheckBox(tr("Remove shadPS4 text"), &confirmDialog);
+        removeShadps4TextCheckBox->setChecked(
+            gui_settings->GetValue(gui::ss_removeShadps4Text).toBool());
 
         QDialogButtonBox* buttonBox = new QDialogButtonBox(
             QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &confirmDialog);
 
-        layout->addWidget(addVersionNameCheckBox);
+        layout->addWidget(removeShadps4TextCheckBox);
         layout->addWidget(buttonBox);
 
         QObject::connect(buttonBox, &QDialogButtonBox::accepted, &confirmDialog, &QDialog::accept);
@@ -834,7 +835,7 @@ private:
             return false;
         }
 
-        gui_settings->SetValue(gui::ss_addVersionTag, addVersionNameCheckBox->isChecked());
+        gui_settings->SetValue(gui::ss_removeShadps4Text, removeShadps4TextCheckBox->isChecked());
         return true;
     }
 
